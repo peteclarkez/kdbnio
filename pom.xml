@@ -1,0 +1,138 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	
+	<groupId>com.fd.q</groupId>
+	<artifactId>qnetty</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+	<scm>
+		<connection>scm:git:https://bitbucket.org/peteclarkez/qnetty</connection>
+		<developerConnection>scm:git:https://bitbucket.org/peteclarkez/qnetty.git</developerConnection>
+		<url>https://bitbucket.org/peteclarkez/qnetty</url>
+	</scm>
+
+
+	<build>
+		<finalName>${project.artifactId}-${project.version}-r${buildNumber}</finalName>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+				</configuration>
+			</plugin>
+			<!-- https://github.com/code54/buildversion-plugin -->
+			<!-- <plugin> <groupId>com.code54.mojo</groupId> <artifactId>buildversion-plugin</artifactId> 
+				<version>1.0.2</version> <executions> <execution> <goals><goal>set-properties</goal></goals> 
+				</execution> </executions> </plugin> -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>buildnumber-maven-plugin</artifactId>
+				<version>1.2</version>
+				<executions>
+					<execution>
+						<id>makeTimeStamp</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>create-timestamp</goal>
+						</goals>
+						<configuration>
+							<timestampFormat>yyyyMMddHHmm</timestampFormat>
+							<timestampPropertyName>buildTimeStamp</timestampPropertyName>
+						</configuration>
+					</execution>
+					<execution>
+						<id>makeBigGitBuildNumber</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>create</goal>
+						</goals>
+						<configuration>
+							<buildNumberPropertyName>fullBuildNumber</buildNumberPropertyName>
+						</configuration>
+					</execution>
+					<execution>
+						<id>makeincrementalGitBuildNumber</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>create</goal>
+						</goals>
+						<configuration>
+							<format>{0,date,yyyyMMddHHmm}_{1}</format>
+							<items>
+								<item>timestamp</item>
+								<item>scmVersion</item>
+							</items>
+							<shortRevisionLength>6</shortRevisionLength>
+						</configuration>
+					</execution>
+				</executions>
+				<configuration>
+					<doCheck>false</doCheck>
+					<doUpdate>false</doUpdate>
+					<revisionOnScmFailure>00000</revisionOnScmFailure>
+					<getRevisionOnlyOnce>true</getRevisionOnlyOnce>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.4</version>
+				<configuration>
+					<archive>
+						<manifest>
+							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+						</manifest>
+						<manifestEntries>
+							<SCM-Version>${fullBuildNumber}</SCM-Version>
+							<Implementation-Build>${buildNumber}</Implementation-Build>
+							<Implementation-Time>${buildTimeStamp}</Implementation-Time>
+						</manifestEntries>
+					</archive>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	<dependencies>
+		<dependency>
+			<groupId>io.netty</groupId>
+			<artifactId>netty-all</artifactId>
+			<version>4.1.17.Final</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-compress</artifactId>
+			<version>1.4.1</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+			<version>2.6</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.7.6</version>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>1.2.3</version>
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.8.2</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+</project>
